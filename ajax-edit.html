@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<title>Edit page</title>
+		<script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+	</head>
+	<body>
+		<form method="POST">
+			Employee id:  <input type="text" id="id" ><br><br>
+			Employee Name:<input type="text" id="name" ><br><br>
+			Employee Salary:<input type="text"  id="salary" ><br><br>
+			Employee age:<input type="text"  id="age"><br><br>
+			<button class="btn btn-primary" id="btn-update">UPDATE DATA</button>
+		</form>
+		<script>
+
+			$(function(){
+
+				var url_string = window.location.href;
+				var url = new URL(url_string);
+				var empId = url.searchParams.get("data_id");
+				console.log(empId);
+				getEmpDetails(empId);
+				bindclick();
+
+			});
+
+			function getEmpDetails(empId){
+				$.ajax({
+					type: 'GET',
+					url: 'http://dummy.restapiexample.com/api/v1/employee/'+empId,
+					success: function(result){
+						console.log(result);
+						var resultString = JSON.parse(result);
+						$('#id').val(resultString.id);
+						$('#name').val(resultString.employee_name);
+						$('#salary').val(resultString.employee_salary);
+						$('#age').val(resultString.employee_age);
+					}
+				});
+			}
+			function bindclick(){
+				$('#btn-update').unbind('click').bind('click',function(e)
+				{
+					e.preventDefault();
+					var result={}
+
+					var id= $('#id').val();
+					result.name = $('#name').val();
+					result.salary = $('#salary').val();
+					result.age = $('#age').val();
+
+				$.ajax({
+					type:'PUT',
+					url:'http://dummy.restapiexample.com/api/v1/update/'+id,
+					data:JSON.stringify(result),
+					success: function(result)
+					{
+						console.log(result);
+						alert("data updated successfully");
+						window.location.href = "file:///C:/Users/User/Desktop/sugandha/ajax-display.html";
+
+
+					}
+
+
+
+
+
+				})
+					
+
+
+					// }
+					console.log(result);
+					
+
+				})
+
+			}
+
+			/*$.ajax({
+				type:'PUT',
+				url:'http://dummy.restapiexample.com/api/v1/update/21/',
+				success:function(data)
+				{
+					var obj=JSON.parse(data);
+					for(var i=0;i<obj.length;i++)
+					{
+						("#salary").html(JSON.stringify(obj));
+					}
+				}*/
+		</script>
+	</body>
+</html>

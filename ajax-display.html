@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+	</head>
+	<body>
+		<h1> Employee Details</h1>
+		<ul class="list-group"> </ul>
+		<script type="text/javascript">
+			$(function()
+			{
+				$.ajax({
+					type:'GET',
+					url:'http://dummy.restapiexample.com/api/v1/employees',
+					success:function(empdetail)
+					{
+						var obj = JSON.parse(empdetail);
+						console.log('success',obj);
+						for(var i=0;i<=obj.length;i++)
+						{
+							if(obj[i]){
+							console.log(obj[i].id);
+								var newelement = '<li class="list-group-item"><span class="badge">Name:'+obj[i].employee_name+'</span><span class="badge">Salary:'+obj[i].employee_salary+'</span><span class="badge">Age:'+obj[i].employee_age+'</span><span class="badge">   <a href="ajax-edit.html?data_id='+obj[i].id+'"         class="btn btn-sm btn-warning">Edit</a></span>    <span class="badge">            <button class="btn-danger delbutton" data-id='+obj[i].id+'>DELETE</button></span></li>';
+								$(".list-group").append(newelement);
+
+
+							}
+
+						}
+						bindClick();
+					}
+				});
+
+				function bindClick()
+				{
+					$(".delbutton").unbind('click').bind('click',function(e)
+					{
+						e.preventDefault();
+						var empId=$(this).attr('data-id');
+						var $itemToDelete = $(this).closest('.list-group-item');
+						$.ajax({
+							type:'DELETE',
+							url:'http://dummy.restapiexample.com/api/v1/delete/' + empId,
+							success: function(result)
+							{
+								alert("done");
+								$itemToDelete.remove();
+							}
+						});
+					});
+				}				
+			});	
+			// $(".delbutton").unbind('click').bind('click',function(e)
+			// {
+			// 	e.preventDefault();
+			// 	var del=$(this).attr('data-id');
+			// 	$itemToDelete = $(this).closest('.list-group-item');
+			// 	$.ajax({
+			// 		type:'DELETE',
+			// 		url:'http://dummy.restapiexample.com/api/v1/delete/' + obj[i].id,
+			// 		success: function(result)
+			// 		{
+			// 			$(result).remove();
+			// 		}
+			// 	});
+			// });
+		</script>
+	</body>
+</html>
